@@ -17,19 +17,19 @@ static QueueHandle_t msg_queue;
 void serialRead(void *pvParameters){
   msg receive;
   char x;
-  String command;
-  uint16_t num;
+  String command = String();
   for(;;){
     if(Serial.available() > 0){
       x = Serial.read();
       if(x != '\n'){
         command = command + x;
         Serial.print(x);
+
         if(x == '\b'){
-          Serial.print(' ');
-          command = command + ' ';
-          Serial.print('\b');
-          command = command + '\b';
+          Serial.print(" ");
+          command = command + " ";
+          Serial.print("\b");
+          command = command + "\b";
 
         }
       }
@@ -37,9 +37,8 @@ void serialRead(void *pvParameters){
         String sub = String();
         uint32_t delay;
         Serial.print('\n');
-        //Serial.println(command);
         if(command.indexOf("delay") > -1){
-          sub = command.substring(sizeof("delay"), sizeof(command));
+          sub = command.substring(sizeof("delay"));
           delay = sub.toInt();
           if(delay > 0){
             xQueueSend(delay_value, (void*)&delay, 10);
